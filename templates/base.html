@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ blog.title }}的个人站点</title>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script src="/static/js/jquery-3.4.1.js"></script>
+    <script src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    {% block page_css %}
+    {% endblock %}
+    {% block page_script %}
+    {% endblock %}
+</head>
+<body>
+<div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index/">SADIA</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">文章 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">随笔</a></li>
+                </ul>
+
+                <form action="/search/" method="post">
+                    {% csrf_token %}
+                    <div class="input-group col-md-3" style="margin-top:0 ;pxnpositon:relative">
+                        <input name="search_info" type="text" class="form-control" placeholder="请输入搜索内容">
+                        <span class="input-group-btn glyphicon glyphicon-search">
+                        <button class="btn btn-info btn-search">
+                            <span class="glyphicon glyphicon-search">搜索</span>
+                        </button>
+                    </span>
+                    </div>
+                </form>
+
+                {% if request.user.is_authenticated %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">{{ request.user.username }}</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">更多操作<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/backend/">文章管理</a></li>
+                                <li><a href="#">修改密码</a></li>
+                                <li><a href="#">修改头像</a></li>
+                                <li><a href="/logout/">注销</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/login/">登录</a></li>
+                        <li><a href="/register/">注册</a></li>
+                    </ul>
+                {% endif %}
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</div>
+<div class="head">
+    {{ blog.site_name }}
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-danger">
+                <div class="panel-heading">我的标签</div>
+                <div class="panel-body">
+                    {% for tag in tag_ret %}
+                        <p><a href="/{{ user.username }}/tag/{{ tag.nid }}">{{ tag.title }}({{ tag.cou }})</a></p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">随笔分类</h3>
+                </div>
+                <div class="panel-body">
+                    {% for category in category_ret %}
+                        <p>
+                            <a href="/{{ user.username }}/category/{{ category.nid }}">{{ category.title }}({{ category.cou }})</a>
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">随笔档案</h3>
+                </div>
+                <div class="panel-body">
+                    {% for year in year_ret %}
+                        <P>
+                            <a href="/{{ user.username }}/archive/{{ year.0|date:'Y-m' }}">{{ year.0|date:'Y-m' }}({{ year.1 }}) </a>
+                        </P>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

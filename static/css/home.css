@@ -1,0 +1,127 @@
+body {
+    background: #26282c;
+    background-image: url(/static/image/home_bg.png);
+    background-position: top;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 960px, 720px;
+    font-family: Arial Black, Gadget, "sans-serif";
+    color: whitesmoke;
+}
+
+div {
+    overflow: hidden;
+
+}
+
+ul {
+
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow: hidden;
+    background-color: #333;
+    height: 50px;
+}
+
+li {
+    float: left;
+    height: 100%;
+}
+
+li a, .dropbtn {
+    display: inline-block;
+    color: whitesmoke;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    height: 100%;
+}
+
+li a:hover, .dropdown:hover, .dropbtn {
+    background-color: #111;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    color: white;
+}
+
+#sadia:hover {
+    color: cyan;
+}
+
+p {
+    color: whitesmoke;
+}
+
+.dropdown {
+    display: inline-block;
+
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+
+}
+
+.dropdown-content a {
+    color: grey;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+
+}
+
+.dropdown-content a:hover {
+    /*font-size: larger;*/
+    /*background-color: lightskyblue;*/
+    color: black;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+
+}
+
+.breakline-v {
+    width: 1px;;
+    background-color: red; /* 不支持线性的时候显示 */
+    background-image: linear-gradient(to bottom, greenyellow, palevioletred);
+}
+
+.breakline-h {
+    height: 1px;
+    background-color: red; /* 不支持线性的时候显示 */
+    background-image: linear-gradient(to right, lightseagreen, purple);
+}
+
+.page {
+
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ddd;
+    border-image: -webkit-linear-gradient(#F80, #2ED) 20 20;
+    border-image: -moz-linear-gradient(#F80, #2ED) 20 20;
+    border-image: -o-linear-gradient(#F80, #2ED) 20 20;
+    border-image: linear-gradient(#F80, #2ED) 20 20;
+
+}
+
+video {
+    width: 100%;
+    height: auto;
+}
+
+.greet h1{
+
+}

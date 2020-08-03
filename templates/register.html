@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script src="/static/js/jquery-3.4.1.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {#            <form action="" enctype="multipart/form-data"></form>#}
+            <h1>注册</h1>
+            <form id="my_form">
+                {% csrf_token %}
+                {% for foo in form %}
+                    <div class="form-group">
+                        <label for="{{ foo.auto_id }}">{{ foo.label }}</label>
+                        {{ foo }} <span style="color: red" class="error pull-right"></span>
+                    </div>
+
+                {% endfor %}
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" name="code" id="id_code" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+
+                        <input value="发送验证码" class="btn btn-success" id="id_validate">
+                        <span style="color: red" class="error pull-right"></span>
+
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="id_file">头像
+                        <img src="/static/image/default.png" width="80" height="80"
+                             id="id_img" style="margin-left: 20px">
+                    </label>
+                    <input type="file" name="file" id="id_file" style="display: none">
+                </div>
+                <input type="button" class="btn btn-primary" value="提交" id="id_submit">
+
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+
+
+    $('#id_file').change(function () {
+        var file = $('#id_file')[0].files[0]
+        var filereader = new FileReader()
+        filereader.readAsDataURL(file)
+        filereader.onload = function () {
+            $('#id_img').attr('src', filereader.result)
+        }
+    })
+
+    $('#id_validate').click(function () {
+        var email = $('#id_email').val()
+        if (email.search("@") == -1) {
+            alert('邮件地址不正确')
+        } else {
+            $.ajax({
+                url: '/e_validate/',
+                type: 'post',
+                data: {
+                    email: email,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function (data) {
+                }
+            })
+        }
+    })
+
+
+    $("#id_submit").click(function () {
+        var formdata = new FormData()
+        //formdata.append('name', $('#id_name')).val()
+        //formdata.append('pwd', $('#id_pwd')).val()
+        //easy way
+        var my_form_data = $('#my_form').serializeArray()
+        formdata.append('avatar', $('#id_file')[0].files[0])
+        $.each(my_form_data, function (k, v) {
+            formdata.append(v.name, v.value)
+        })
+        var code = $("#id_code").val()
+        $.ajax({
+            url: '/register/',
+            type: 'post',
+            processData: false,
+            contentType: false,
+            data: formdata,
+
+            success: function (data) {
+                //console.log(data)
+                if (data.code == 100) {
+                    location.href = '/login/'
+                } else if (data.code == 101) {
+                    $.each(data.msg, function (k, v) {
+                        console.log(k)
+                        console.log(v)
+                        $('#id_' + k).next().html(v[0])
+                        if (k == '__all__') {
+                            $('#id_re_pwd').next().html(v[0])
+                        }
+                    })
+                } else if (data.code == 102) {
+                    $('#id_validate').next().html(data.msg)
+                }
+                //定时器
+                setTimeout(function () {
+                    $(".error").html('')
+                }, 3000)
+            }
+        })
+
+    })
+</script>
+</html>

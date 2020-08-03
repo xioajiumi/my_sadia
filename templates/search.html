@@ -1,0 +1,43 @@
+{% extends 'index_base.html' %}
+{% block index_main %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>搜索结果</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for article in searched_article_list %}
+            <tr>
+                <td>
+                    <h4><a href="/{{ article.blog.userinfo.username }}/article/{{ article.pk }}">{{ article.title }}</a></h4>
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="/{{ article.blog.userinfo.username }}">
+                                <img class="media-object" src="/media/{{ article.blog.userinfo.avatar }}"
+                                     height="60"
+                                        {#                            <img class="media-object" src="/media/avatar/2.png" height="60"#}
+                                     width="60">
+                            </a>
+
+                        </div>
+                        <div class="media-body">
+                            {{ article.desc }}
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px">
+                        <div class="bottom_article">
+                        <span><a
+                                href="/{{ article.blog.userinfo.username }}">{{ article.blog.userinfo.username }}</a></span>
+                            <span>发布于 {{ article.create_time|date:'Y-m-d H:i' }}</span>
+                            <span class="glyphicon glyphicon-comment">评论({{ article.commit_set.count }})</span>
+                            <span class="glyphicon glyphicon-thumbs-up">点赞({{ article.up_num }})</span>
+
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

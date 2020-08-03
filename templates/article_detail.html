@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block page_css %}
+    <link rel="stylesheet" href="/static/css/pagecss.css">
+{% endblock %}
+{% block content %}
+    <div>
+        <h4>{{ article.title }}</h4>
+        <div>
+            {{ article.content|safe }}
+        </div>
+        <div class="clearfix">
+            <div class="common upanddown">
+                <div class="pull-right updown down">
+                    <span class="glyphicon glyphicon-thumbs-down">({{ article.down_num }})点踩</span>
+                </div>
+                <div class="pull-right updown up">
+                    <span class="glyphicon glyphicon-thumbs-up">({{ article.up_num }})点赞</span>
+                </div>
+            </div>
+            <div class="error pull-right" id="digg_tips"></div>
+        </div>
+
+        <div class="col-md-7">
+            {# 评论 #}
+            <div>
+                {#列表#}
+                <P>评论列表</P>
+                <ul class="list-group commit_content">
+                    {% for commit in article.commit_set.all %}
+                        <li class="list-group-item">
+                            <p>
+                                <span>#{{ forloop.counter }}楼</span>
+                                <span>{{ commit.create_time|date:'Y-m-d H:i' }}</span>
+                                <span><a href="">{{ commit.user.username }}</a></span>
+                                <span class="pull-right reply" username="{{ commit.user.username }}"
+                                      commit_id="{{ commit.pk }}">
+                            <a>回复</a></span>
+                            </p>
+                            <p>
+                                {% if commit.parent_id %}
+                                    <P class="well">@{{ commit.parent.user.username }}</P>
+                                {% endif %}
+                            {{ commit.content }}
+                            </p>
+                        </li>
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+            <div clas="">
+                {#发表#}
+                <p>评论内容</p>
+                <textarea name="" id="id_textarea" cols="90" rows="10" class="text"></textarea>
+                <p>
+                    <button class="btn-success pull-right" id="btn_submit">发表</button>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        var parent_id = ''
+        $(".updown").click(function () {
+            var is_up = $(this).hasClass('up')
+            var cu_span = $(this).children('span')
+            $.ajax({
+                url: '/diggit/',
+                type: 'post',
+                data: {article_id: '{{article.pk}}', is_up: is_up, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                success: function (data) {
+                    console.log(data)
+                    $('#digg_tips').html(data.msg)
+                    if (data.code == 100) {
+                        if (cu_span.hasClass('glyphicon-thumbs-down')) {
+                            cu_span.text('(' + ({{ article.up_num }}+1) + ')' + '点踩')
+                        }
+                        else {
+                            cu_span.text('(' + ({{ article.up_num }}+1) + ')' + '点赞')
+                        }
+                    }
+
+                }
+            })
+        })
+        $('#btn_submit').click(function () {
+            var content = $('#id_textarea').val()
+            if (parent_id) {
+                var index = content.indexOf('\n') + 1
+                var content = content.slice(index)
+            }
+            $.ajax({
+                url: '/commit/',
+                type: 'post',
+                data: {
+                    article_id: '{{article.pk}}', content: content,
+                    csrfmiddlewaretoken: '{{ csrf_token }}', parent_id: parent_id
+                },
+                success: function (data) {
+                    console.log(data)
+                    $('#id_textarea').val('')
+                    if (data.code == 100) {
+                        var username = data.username
+                        var reply_content = data.reply_content
+                        if (parent_id) {
+                            var parent_name=data.parent_name
+                            var string = `
+                            <li class="list-group-item">
+                            <p>
+                                <span>${username}</span>
+                                <P class="well">@${ parent_name }</P>
+                            </p>
+                            ${reply_content}
+                            </li>`
+                        } else {
+                            var string = `
+                            <li class="list-group-item">
+                            <p>
+                                <span>${username}</span>
+                            </p>
+                            ${reply_content}
+                            </li>`
+                        }
+                        $('.commit_content').append(string)
+                    }
+                }
+            })
+        })
+        //需要加一个空回复删除parent_id的功能
+        $(".reply").click(function () {
+            var username = $(this).attr('username')
+            parent_id = $(this).attr('commit_id')
+            $("#id_textarea").focus()
+            $("#id_textarea").val('@' + username + '\n')
+        })
+    </script>
+
+
+{% endblock content %}

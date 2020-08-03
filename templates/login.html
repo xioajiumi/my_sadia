@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script src="/static/js/jquery-3.4.1.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h1>登录</h1>
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_name">用户名</label>
+                <input type="text" name="name" id="id_name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="id_pwd">密码</label>
+                <input type="password" name="pwd" id="id_pwd" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="id_code">验证码</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" name="code" id="id_code" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <img src="/get_code/" height="40" width="200" id="id_img">
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="提交" class="btn btn-success" id="submit_btn">
+            <span class="error" style="color:red "></span>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $('#id_img').click(function () {
+        $('#id_img')[0].src += '?'
+    })
+    $("#submit_btn").click(function () {
+        $.ajax({
+            url: '/login/',
+            type: 'post',
+            data: {
+                name: $("#id_name").val(),
+                pwd: $("#id_pwd").val(),
+                code: $("#id_code").val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                {#console.log(data)#}
+                {#console.log(typeof data)#}
+                if (data.code == 100) {
+                    location.href = '/index/'
+                } else {
+                    $(".error").text(data.msg)
+                }
+            }
+        })
+    })
+
+
+</script>
+</html>

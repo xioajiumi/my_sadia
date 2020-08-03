@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/pagecss.css">
+    <script src="/static/js/jquery-3.4.1.js"></script>
+    <script src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <style>
+        .bottom_article span {
+            margin-right: 5px;
+        }
+
+
+    </style>
+</head>
+<body>
+<div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index/">SADIA</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">文章 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">随笔</a></li>
+                </ul>
+
+                <form action="/search/" method="post">
+                    {% csrf_token %}
+                    <div class="input-group col-md-3" style="margin-top:0 ;pxnpositon:relative">
+                        <input name="search_info" type="text" class="form-control" placeholder="请输入搜索内容">
+                        <span class="input-group-btn glyphicon glyphicon-search">
+                        <button class="btn btn-info btn-search">
+                            <span class="glyphicon glyphicon-search">搜索</span>
+                        </button>
+                    </span>
+                    </div>
+                </form>
+
+                {% if request.user.is_authenticated %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">{{ request.user.username }}</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">更多操作<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/backend/">文章管理</a></li>
+                                <li><a href="#">修改密码</a></li>
+                                <li><a href="#">修改头像</a></li>
+                                <li><a href="/logout/">注销</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/login/">登录</a></li>
+                        <li><a href="/register/">注册</a></li>
+                    </ul>
+                {% endif %}
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="panel panel-danger">
+                <div class="panel-heading">广告招商</div>
+                <div class="panel-body">联系电话：99999</div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">草榴社区</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="http://www.baidu.com">点我</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-7">
+            {% block index_main %}
+            {% endblock index_main %}
+
+        </div>
+
+
+        <div class="col-md-3">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    广告招商
+                </div>
+                <div class="panel-body">
+                    联系电话：99999
+                </div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">草榴社区</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="http://www.baidu.com">点我</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
