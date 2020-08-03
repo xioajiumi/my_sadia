@@ -49,4 +49,3 @@ urlpatterns = [
 
 ]
 
-
