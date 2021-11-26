@@ -18,8 +18,8 @@ def validate(receiver, code,):
 
     # E-Authenticatecode   SXDCVVWMKJBUWLMY
     smtpserver = 'smtp.163.com'
-    username = 'sadia_server@163.com'
-    password = 'SXDCVVWMKJBUWLMY'
+    username = 'YOUR_SERVER@163.com'
+    password = 'YOURPASSWORD'
     sender = username  # sender一般要与username一样
 
     subject = '注册验证邮件，请勿回复'
